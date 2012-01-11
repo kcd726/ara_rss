@@ -8,7 +8,7 @@ require 'rss'
 
 include WEBrick
 
-class AraCrawlServlet < HTTPServlet::AbstractServlet
+class Crawler
 	def crawl
 		agent = Mechanize.new
 		page = agent.get 'http://ara.kaist.ac.kr/all/?page_no=1'
@@ -38,11 +38,13 @@ class AraCrawlServlet < HTTPServlet::AbstractServlet
 				end
 			end
 		end
-		rss.to_s
 	end
+end
 
+class Servlet < HTTPServlet::AbstractServlet
 	def do_GET(req, resp)
-		resp.body = crawl
+		crawler = Crawler.new
+		resp.body = crawler.crawl.to_s
 		raise HTTPStatus::OK
 	end
 
@@ -54,9 +56,5 @@ yield server if block_given?
 ['INT', 'TERM'].each {|signal|
 	trap(signal) {server.shutdown}
 }
-server.mount('/ara', AraCrawlServlet)
+server.mount('/ara', Servlet)
 server.start
-
-# Added to learn git.
-# This is master branch.
-## git branch experimental
