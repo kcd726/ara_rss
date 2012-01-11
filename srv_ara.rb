@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-$: << Dir.pwd
+$: << File.dirname(__FILE__)
 require 'webrick'
 require 'crawler'
 
