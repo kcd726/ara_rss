@@ -9,7 +9,7 @@ require 'rss'
 include WEBrick
 
 class Crawler
-	def crawl
+	def get_rss
 		agent = Mechanize.new
 		page = agent.get 'http://ara.kaist.ac.kr/all/?page_no=1'
 		doc = Nokogiri::HTML(page.body)
@@ -44,7 +44,7 @@ end
 class Servlet < HTTPServlet::AbstractServlet
 	def do_GET(req, resp)
 		crawler = Crawler.new
-		resp.body = crawler.crawl.to_s
+		resp.body = crawler.get_rss.to_s
 		raise HTTPStatus::OK
 	end
 
